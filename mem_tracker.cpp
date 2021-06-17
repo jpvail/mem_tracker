@@ -27,29 +27,6 @@ typedef unsigned long long u8;
  */
 #define PFN_TO_IPF_IDX(pfn) pfn >> 6 << 3
 
-void getidle(u8 nr_pfns, u8 pfns[])
-{
-	int fd;
-	u8 entry, pfn;
-	u8 i;
-
-	fd = open("/sys/kernel/mm/page_idle/bitmap", O_RDONLY);
-	if (fd < 0)
-		err(2, "open bitmap");
-
-	for (i = 0; i < nr_pfns; i++) {
-		pfn = pfns[i];
-		entry = 0;
-		if (pread(fd, &entry, sizeof(entry), PFN_TO_IPF_IDX(pfn))
-				!= sizeof(entry))
-			err(2, "%s: read bitmap", __func__);
-		printf("%d ", (int)BIT_AT(entry, pfn % 64));
-	}
-	printf("\n");
-
-	close(fd);
-}
-
 
 static void print_page(uint64_t address, uint64_t data,
     const char *lib_name, vector<uint64_t> *vec) {
