@@ -30,7 +30,6 @@ typedef unsigned long long u8;
 
 static void print_page(uint64_t address, uint64_t data,
     const char *lib_name, vector<uint64_t> *vec) {
-
         uint64_t pfn = data & 0x7fffffffffffff; 
         if(pfn != 0){
             vec->push_back(pfn); 
@@ -153,7 +152,6 @@ void parse_maps(const char *maps_file, const char *pagemap_file) {
 
     uint64_t pfn, entry;
     uint64_t i;
-
     for(;;){
         for(i = 0; i < pfn_container.size(); ++i){
             pfn = pfn_container[i];
@@ -174,16 +172,13 @@ void parse_maps(const char *maps_file, const char *pagemap_file) {
             if (pread(fd, &entry, sizeof(entry), PFN_TO_IPF_IDX(pfn))
                     != sizeof(entry))
                 err(2, "%s: read bitmap", __func__);
-            printf("%d ", (int)BIT_AT(entry, pfn % 64));
 
             if((int)BIT_AT(entry, pfn % 64) == 0){
                 printf("%p \n", pfn); 
             }
         }
-
-        close(fd);
     }
-
+    close(fd); 
     close(maps);
     close(pagemap);
 }
